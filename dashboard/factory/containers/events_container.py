@@ -12,9 +12,10 @@ class EventsContainer:
     economy_2 : pd.DataFrame
 
     def get_n_last_versions(self, n_value=2):
-        '''
+        """
         Extracts last n global versions of application.
-        '''
+        Returns tuple with n items.
+        """
         list_of_versions = sorted(
             self.funnel["app_version"].unique().tolist(),
             reverse=True

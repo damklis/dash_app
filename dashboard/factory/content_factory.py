@@ -4,6 +4,7 @@ from factory.aggregations.session_aggregations import SessionAgregator
 from factory.aggregations.winratio_aggregations import WinRatioAgregator
 from factory.aggregations.droprate_aggregations import DropRateAgregator
 from factory.aggregations.economy_aggregations import EconomyAgregator
+import json
 
 class ContentFactory(object):
 
@@ -26,21 +27,33 @@ class ContentFactory(object):
 
     @property
     def funnel_df(self):
+        """
+        Returns dataframe necessary for frst funnel chart.
+        """
         funnel = FunnelAggregator(self._dfs.funnel, self.app_version)
         return funnel.create_funnel_df()
     
     @property
-    def funnel_df_2(self):
+    def funnel_2_df(self):
+        """
+        Returns dataframe necessary for second funnel chart.
+        """
         funnel = FunnelAggregator(self._dfs.funnel, self.app_version_2)
         return funnel.create_funnel_df()
 
     @property
     def session_stats(self):
+        """
+        Returns data necessary for session charts.
+        """
         sess = SessionAgregator(self._dfs.session, self.app_version)
         return sess.create_session_stats()
 
     @property
     def win_ratio_df(self):
+        """
+        Returns dataframe necessary for win-ratio chart.
+        """
         winratio = WinRatioAgregator(self._dfs.win_lose, self.app_version)
         return winratio.create_winratio_df(
             self.lvls, self.diff_lvl_wr, self.randomness_label
@@ -48,6 +61,9 @@ class ContentFactory(object):
 
     @property
     def drop_rate_df(self):
+        """
+        Returns dataframe necessary for drop-rate chart.
+        """
         droprate = DropRateAgregator(self._dfs.drop_rate, self.app_version)
         return droprate.create_drop_rate_df(
             self.lvls, self.diff_lvl_wr
@@ -55,11 +71,16 @@ class ContentFactory(object):
 
     @property
     def economy_df(self):
+        """
+        Returns dataframe necessary for first economy chart.
+        """
         ec = EconomyAgregator(self._dfs.economy, self.app_version)
         return ec.create_economy_df(self.lvls)
 
     @property
     def economy_2_df(self):
+        """
+        Returns dataframe necessary for second economy chart.
+        """
         ec = EconomyAgregator(self._dfs.economy_2, self.app_version)
         return ec.create_economy_df(self.lvls)
-

@@ -10,14 +10,14 @@ class EconomyAgregator(BaseAggregator):
         super().__init__(dataframe, app_version)
 
     def create_economy_df(self, lvls_bundle):
-        '''
-        Creating economy table. This table will be used in chart as input data.
-        '''
-        # filtering DataFrame
+        """
+        Returns economy table with aggregated values.
+        This table will be used in the chart as input data.
+        """
         filtered_df = self.choose_appversion()
-        lvls_df = filtered_df[filtered_df['levels_bundle'].isin(lvls_bundle)]
+        lvls_df = filtered_df[filtered_df["levels_bundle"].isin(lvls_bundle)]
 
         if len(lvls_bundle) != 0:
-            return lvls_df.sort_values(by='level')
+            return lvls_df.sort_values(by="level")
 
-        return filtered_df.sort_values(by='level')
+        return filtered_df.sort_values(by="level")

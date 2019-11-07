@@ -8,22 +8,23 @@ class SessionAgregator(BaseAggregator):
         super().__init__(dataframe, app_version)
 
     def create_session_stats(self):
-        '''
-        Creating session stats. This table will be used in chart as input data.
-        '''
-        # filtering DataFrame
+        """
+        Returns session stats as tuple.
+        These variables will be used in the chart as input data.
+        """
         filtered_df = self.choose_appversion()
         
-        glob_sess_mean = round(filtered_df['sess_time'].mean() / 60,2)
-        glob_sess_median = round(filtered_df['sess_time'].median() / 60,2)
+        ### calculating global session metrics
+        glob_sess_mean = round(filtered_df["sess_time"].mean() / 60,2)
+        glob_sess_median = round(filtered_df["sess_time"].median() / 60,2)
 
-        # calculating metrics
-        df_pvt = filtered_df.groupby('session').agg(
+        ### calculating metrics
+        df_pvt = filtered_df.groupby("session").agg(
             lambda x: len(x.unique())
                 ).reset_index()
 
-        df_pvt['drop'] = round(df_pvt['user_id'] / df_pvt['user_id'].max() * 100, 2)
+        df_pvt["drop"] = round(df_pvt["user_id"] / df_pvt["user_id"].max() * 100, 2)
 
-        df = df_pvt[['session', 'drop']]
+        df = df_pvt[["session", "drop"]]
 
         return (glob_sess_mean, glob_sess_median, df)

@@ -190,7 +190,7 @@ ORDER by user_id
 ## Query to extract info about player's economy during game.
 query_economy = """WITH
 installs AS (SELECT DISTINCT user_id
-FROM omg_events.animatch
+FROM events.game
 WHERE event_name = "type"
 AND `date` BETWEEN "{first_dt}" AND "{second_dt}"
 AND geoip_country != "company"
@@ -206,8 +206,8 @@ users AS(SELECT b.event_data["Board_id"] as board_id,
     get_json_object(a.event_data["Status"], "$.Keys") as Keys,
     get_json_object(a.event_data["Status"], "$.HC") as HC,
     dense_rank() OVER (PARTITION BY b.user_id ORDER BY b.`timestamp`) rank_lvl
-FROM omg_events.animatch a
-JOIN omg_events.animatch b
+FROM events.game a
+JOIN events.game b
 ON a.event_data["Game_number"] = b.event_data["Game_number"]
 WHERE a.event_name = "end_game_2"
 AND b.event_name = "end_game"
@@ -247,7 +247,7 @@ FROM versions
 ## Query to extract info about player's economy during game.
 query_economy_2 = """WITH
 installs AS (SELECT DISTINCT user_id
-FROM omg_events.animatch
+FROM events.game
 WHERE event_name = "type"
 AND `date` >= "{second_dt}"
 AND geoip_country != "company"

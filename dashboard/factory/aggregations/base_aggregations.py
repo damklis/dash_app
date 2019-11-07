@@ -8,22 +8,22 @@ class BaseAggregator(object):
         self.app_version = app_version
 
     def choose_appversion(self):
-        '''
-        This function filter DataFrame by version of application.
-        '''
-        return self.dataframe[self.dataframe['app_version'] == self.app_version]\
+        """
+        This function filter DataFrame by the version of the application.
+        """
+        return self.dataframe[self.dataframe["app_version"] == self.app_version]\
             .drop_duplicates()
 
     def add_difficulty_level(self, column):
-        '''
-        Adding column with difficulty level.
-        '''
-        if column[2:4] == '01':
-            return 'normal'
-        elif column[2:4] == '02':
-            return 'challenging'
+        """
+        Returns column with mapped difficulty values. 
+        """
+        if column[2:4] == "01":
+            return "normal"
+        elif column[2:4] == "02":
+            return "challenging"
         else:
-            return 'expert'
+            return "expert"
 
     def __str___(self):
-        return "Test"
+        return f"BaseAggregator({self.dataframe}, {self.app_version})"
