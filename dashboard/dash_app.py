@@ -17,6 +17,10 @@ import io
 import datetime
 from common.app_settings import Tabs, StyleSheets
 import json
+import jsonpickle
+import jsonpickle.ext.pandas as jsonpickle_pandas
+
+jsonpickle_pandas.register_handlers()
 
 TODAY_DATE = str(datetime.date.today()).replace("-","_")
 
@@ -58,7 +62,7 @@ app.config.suppress_callback_exceptions = True
 
 ## App"s main layout.
 app.layout = html.Div([
-    html.Div(id='intermediate-value', style={'display': 'none'}),
+    html.Div(id="intermediate-value", style={"display": "none"}),
     html.Div(className="row", children=[
         html.Div([
             dcc.Markdown(d("""
@@ -211,7 +215,7 @@ def set_levels_bundle_values(available_options):
     return [i["value"] for i in available_options]
 
 @app.callback(
-    Output('intermediate-value', 'children'),
+    Output("intermediate-value", "children"),
     [Input("app-version", "value"),
      Input("diff-levels-win-ratio", "value"),
      Input("diff-levels-drop-rate", "value"),
@@ -225,59 +229,33 @@ def generate_data(app_version, diff_lvl_wr, diff_lvl_dr,
     cf = ContentFactory(events, app_version, diff_lvl_dr,
         diff_lvl_wr, randomness_label, resource, df_data, lvls)
 
-    data = {
-        'droprate_df': cf.drop_rate_df.to_json(orient='split'),
-        'winratio_df': cf.win_ratio_df.to_json(orient='split'),
-        'funnel_df': cf.funnel_df.to_json(orient='split'),
-        'funnel2_df': cf.funnel_2_df.to_json(orient='split'),
-        'economy_df': cf.economy_df.to_json(orient='split'),
-        'economy2_df': cf.economy_2_df.to_json(orient='split'),
-        'resource': cf.resource,
-        'data': cf.df_data,
-        'app_v1': cf.app_version,
-        'app_v2': cf.app_version_2,
-        'sessm' : cf.session_stats[0],
-        'sessmd' : cf.session_stats[1],
-        'sessions' : cf.session_stats[2].to_json(orient='split')
-     }
-
-    return json.dumps(data)
-
+    return jsonpickle.encode(cf)
 
 @app.callback(
     Output("tabs-content-inline", "children"),
     [Input("tabs-styled-with-inline", "value"),
-     Input('intermediate-value', 'children')])
+     Input("intermediate-value", "children")])
 def render_content(tab, cached_json_data):
     """
-    This is main function that aggregates data 
-    and creates all interactions on dashboard.
+    This is main function that creates all interactions on dashboard.
     """
-    data = json.loads(cached_json_data)
-    droprate = pd.read_json(data['droprate_df'], orient='split')
-    winratio = pd.read_json(data['winratio_df'], orient='split')
-    funnel1 = pd.read_json(data['funnel_df'], orient='split')
-    funnel2 = pd.read_json(data['funnel2_df'], orient='split')
-    economy = pd.read_json(data['economy_df'], orient='split')
-    economy2 = pd.read_json(data['economy2_df'], orient='split')
-    sessions = pd.read_json(data['sessions'], orient='split')
+    cf = jsonpickle.decode(cached_json_data)
 
-    ### Creating tabs filled with content.
     if tab == "tab-1":
-        return fill_funnel_with_content(funnel1, funnel2, data['app_v1'], data['app_v2'])
+        return fill_funnel_with_content(cf.funnel_df, cf.funnel_2_df, cf.app_version, cf.app_version_2)
     elif tab == "tab-2":
-        return fill_win_ratio_tab_with_content(winratio)
+        return fill_win_ratio_tab_with_content(cf.win_ratio_df)
     elif tab == "tab-3":
-        return fill_drop_rate_tab_with_content(droprate)
+        return fill_drop_rate_tab_with_content(cf.drop_rate_df)
     elif tab == "tab-4":
-        return fill_sessions_with_content(data['sessm'], data['sessmd'], sessions)
+        return fill_sessions_with_content(*cf.session_stats)
     elif tab == "tab-5":
-        return fill_economy_tab_with_content(economy, economy2, data['resource'], data['data'])
+        return fill_economy_tab_with_content(cf.economy_df, cf.economy_2_df, cf.resource, cf.df_data)
 
 @app.callback([Output("download-link", "href"),
                Output("download-link", "download")],
               [Input("app-version", "value"),
-               Input('intermediate-value', 'children')])
+               Input("intermediate-value", "children")])
 def download_excel_report(app_version, cached_json_data):
     """
     Returns formattd Excel"s file ready to download.
@@ -285,10 +263,15 @@ def download_excel_report(app_version, cached_json_data):
     xlsx_io = io.BytesIO()
     writer = pd.ExcelWriter(xlsx_io, engine="xlsxwriter")
 
-    data = json.loads(cached_json_data)
+    cf = jsonpickle.decode(cached_json_data)
     tables = {
-        k:pd.read_json(v, orient='split')
-        for k,v in data.items() if k.endswith('_df')
+        "win-ratio" : cf.win_ratio_df,
+        "drop-rate" : cf.drop_rate_df,
+        "funnel" : cf.funnel_df,
+        "funnel2" : cf.funnel_2_df,
+        "economy" : cf.economy_df,
+        "economy" : cf.economy_2_df,
+        "sessions" : cf.session_stats[2]
          }
 
     for table_name, df in tables.items():
