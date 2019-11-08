@@ -1,16 +1,20 @@
-FROM python3
+FROM python:3.7
+
+USER root 
 
 RUN apt-get update -y
 RUN apt-get install -y g++ libsasl2-dev libsasl2-modules
 
-COPY requirements.txt /tmp
-RUN pip3 install -r /tmp/requirements.txt
+ADD . /app
 
-RUN (crontab -l; echo "0 5,11,17,23 * * * cd /opt/dash_app ; python3 query.py") | crontab -
-RUN (crontab -l; echo "0 0,6,12,18 * * * supervisorctl restart app") | crontab -
+RUN chmod -x /app/dashboard/dash_app.py
 
-ADD . /opt/dash_app
-ADD ./supervisor/* /etc/supervisor/conf.d/
-RUN chmod -x /opt/dash_app/dash_app.py
+WORKDIR /app
+
+RUN pip3 install -r /app/requirements.txt
 
 EXPOSE 80
+
+ENTRYPOINT ["/app"]
+
+CMD ["python", "dashboard/dash_app.py"]
