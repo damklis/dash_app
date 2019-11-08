@@ -16,7 +16,7 @@ Dashboard works on top of data extracted from the HIVE and then converted to pic
 
 # Data Flow
 Image presentation of data flow in the application.
-![dataflow](https://user-images.githubusercontent.com/43547278/68486629-c76a8c80-0241-11ea-882d-a031cab24703.png)
+![dataprovider-1](https://user-images.githubusercontent.com/43547278/68487889-3b0d9900-0244-11ea-9ce8-106493be3274.png)
 
 
 
