@@ -19,22 +19,24 @@ from common.app_settings import Tabs, StyleSheets
 import json
 import jsonpickle
 import jsonpickle.ext.pandas as jsonpickle_pandas
+import flask
+
 
 jsonpickle_pandas.register_handlers()
 
 TODAY_DATE = str(datetime.date.today()).replace("-","_")
 
 ## Reading logo.
-logo_filename = "../dashboard/assets/gamemetricslogo.png"
+logo_filename = "dashboard/assets/gamemetricslogo.png"
 encoded_logo = base64.b64encode(open(logo_filename, "rb").read())
 
 ## Importing data.
-win_lose_events = pd.read_pickle(path="../dataprovider/datasets/query_win_ratio.pkl")
-drop_rate_events = pd.read_pickle(path="../dataprovider/datasets/query_drop_rate.pkl")
-funnel_events = pd.read_pickle(path="../dataprovider/datasets/query_funnel.pkl")
-session_events = pd.read_pickle(path="../dataprovider/datasets/query_session.pkl")
-economy_events = pd.read_pickle(path="../dataprovider/datasets/query_economy.pkl")
-economy_events_2 = pd.read_pickle(path="../dataprovider/datasets/query_economy_2.pkl")
+win_lose_events = pd.read_pickle(path="dataprovider/datasets/query_win_ratio.pkl")
+drop_rate_events = pd.read_pickle(path="dataprovider/datasets/query_drop_rate.pkl")
+funnel_events = pd.read_pickle(path="dataprovider/datasets/query_funnel.pkl")
+session_events = pd.read_pickle(path="dataprovider/datasets/query_session.pkl")
+economy_events = pd.read_pickle(path="dataprovider/datasets/query_economy.pkl")
+economy_events_2 = pd.read_pickle(path="dataprovider/datasets/query_economy_2.pkl")
 
 ## Creating events container with all data.
 events = EventsContainer(
@@ -56,7 +58,12 @@ all_options = {
     }
 
 ## App"s configuration.
-app = dash.Dash(__name__, external_stylesheets=StyleSheets.external_stylesheets)
+server = flask.Flask(__name__)
+app = dash.Dash(
+    __name__,
+    external_stylesheets=StyleSheets.external_stylesheets,
+    server=server
+    )
 app.title = "Metrics"
 app.config.suppress_callback_exceptions = True
 
@@ -242,7 +249,9 @@ def render_content(tab, cached_json_data):
     cf = jsonpickle.decode(cached_json_data)
 
     if tab == "tab-1":
-        return fill_funnel_with_content(cf.funnel_df, cf.funnel_2_df, cf.app_version, cf.app_version_2)
+        return fill_funnel_with_content(
+            cf.funnel_df, cf.funnel_2_df, cf.app_version, cf.app_version_2
+            )
     elif tab == "tab-2":
         return fill_win_ratio_tab_with_content(cf.win_ratio_df)
     elif tab == "tab-3":
@@ -250,7 +259,9 @@ def render_content(tab, cached_json_data):
     elif tab == "tab-4":
         return fill_sessions_with_content(*cf.session_stats)
     elif tab == "tab-5":
-        return fill_economy_tab_with_content(cf.economy_df, cf.economy_2_df, cf.resource, cf.df_data)
+        return fill_economy_tab_with_content(
+            cf.economy_df, cf.economy_2_df, cf.resource, cf.df_data
+            )
 
 @app.callback([Output("download-link", "href"),
                Output("download-link", "download")],
@@ -288,4 +299,4 @@ def download_excel_report(app_version, cached_json_data):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True, host="0.0.0.0")
+    app.run_server(debug=True, host="0.0.0.0", port=80)
