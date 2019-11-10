@@ -6,18 +6,19 @@ import math
 
 class EconomyAgregator(BaseAggregator):
 
-    def __init__(self, dataframe, app_version):
-        super().__init__(dataframe, app_version)
+    def __init__(self, dataframe, lvls_bundle):
+        super().__init__(dataframe)
+        self.lvls_bundle = lvls_bundle
 
-    def create_economy_df(self, lvls_bundle):
+    def create_economy_df(self, app_version):
         """
         Returns economy table with aggregated values.
         This table will be used in the chart as input data.
         """
-        filtered_df = self.choose_appversion()
-        lvls_df = filtered_df[filtered_df["levels_bundle"].isin(lvls_bundle)]
+        filtered_df = self.choose_appversion(app_version)
+        lvls_df = filtered_df[filtered_df["levels_bundle"].isin(self.lvls_bundle)]
 
-        if len(lvls_bundle) != 0:
+        if len(self.lvls_bundle) != 0:
             return lvls_df.sort_values(by="level")
 
         return filtered_df.sort_values(by="level")
