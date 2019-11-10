@@ -6,8 +6,8 @@ from factory.aggregations.base_aggregations import BaseAggregator
 
 class FunnelAggregator(BaseAggregator):
 
-    def __init__(self, dataframe, app_version):
-        super().__init__(dataframe, app_version)
+    def __init__(self, dataframe):
+        super().__init__(dataframe)
         self.max_steps = 25
 
     def add_board_id(self, df):
@@ -47,12 +47,12 @@ class FunnelAggregator(BaseAggregator):
         else:
             return row1 + row2
 
-    def create_funnel_df(self):
+    def create_funnel_df(self, app_version):
         """
         Creating funnel table with aggregated values.
         This table will be used in the chart as input data.
         """
-        filtered_df = self.choose_appversion()
+        filtered_df = self.choose_appversion(app_version)
 
         ### replacing NULLs with board_id and step_id values
         filtered_df["board_id"] = filtered_df.apply(self.add_board_id, axis=1)

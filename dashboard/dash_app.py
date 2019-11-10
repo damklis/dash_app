@@ -232,6 +232,10 @@ def set_levels_bundle_values(available_options):
      Input("levels-boundle", "value")])
 def generate_data(app_version, diff_lvl_wr, diff_lvl_dr,
     randomness_label, resource, df_data, lvls):
+    """
+    Returns serialized Python's object (ContentFactory)
+    containing actual data.
+    """
 
     cf = ContentFactory(events, app_version, diff_lvl_dr,
         diff_lvl_wr, randomness_label, resource, df_data, lvls)
@@ -269,7 +273,7 @@ def render_content(tab, cached_json_data):
                Input("intermediate-value", "children")])
 def download_excel_report(app_version, cached_json_data):
     """
-    Returns formattd Excel"s file ready to download.
+    Returns formatted Excel"s file ready to download.
     """
     xlsx_io = io.BytesIO()
     writer = pd.ExcelWriter(xlsx_io, engine="xlsxwriter")

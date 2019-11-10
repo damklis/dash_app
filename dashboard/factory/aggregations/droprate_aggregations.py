@@ -6,17 +6,18 @@ import math
 
 class DropRateAgregator(BaseAggregator):
 
-    def __init__(self, dataframe, app_version):
-        super().__init__(dataframe, app_version)
+    def __init__(self, dataframe, lvls_bundle, diff_level):
+        super().__init__(dataframe)
+        self.lvls_bundle = lvls_bundle
+        self.diff_level = diff_level
 
-    def create_drop_rate_df(self, lvls_bundle,
-        diff_level=["normal", "challenging", "expert"]):
+    def create_drop_rate_df(self, app_version):
         """
         Returns final DataFrame with aggregated values (ex. drop-rate ratio).
         """
 
-        filtered_df = self.choose_appversion()
-        lvls_df = filtered_df[filtered_df["levels_bundle"].isin(lvls_bundle)]
+        filtered_df = self.choose_appversion(app_version)
+        lvls_df = filtered_df[filtered_df["levels_bundle"].isin(self.lvls_bundle)]
 
         def drop_rate_hepler(df_help):
             df_pv = df_help.groupby(by="board_id").agg(
@@ -24,7 +25,7 @@ class DropRateAgregator(BaseAggregator):
 
             ### calculating metrics
             df_pv["diff_level"] = df_pv["board_id"].apply(self.add_difficulty_level)
-            df_pv["stay_rate_%"] = round(df_pv["total_users"] / df_pv["total_users"].max(),4) *100
+            df_pv["stay_rate_%"] = round(df_pv["total_users"] / df_pv["total_users"].max(),4)*100
             df_pv["drop_rate_%"] = 100.00 - df_pv["stay_rate_%"]
             df_pv["shift"] = df_pv["drop_rate_%"].shift(1).fillna(0)
             df_pv["diff_%"] = df_pv["drop_rate_%"] - df_pv["shift"]
@@ -32,9 +33,9 @@ class DropRateAgregator(BaseAggregator):
             df_pv[["drop_rate_%", "stay_rate_%", "diff_%"]] = df_pv[["drop_rate_%",
                 "stay_rate_%", "diff_%"]].apply(lambda x: round(x,4))
 
-            return df_pv[df_pv["diff_level"].isin(diff_level)]
+            return df_pv[df_pv["diff_level"].isin(self.diff_level)]
 
-        if len(lvls_bundle) != 0:
+        if len(self.lvls_bundle) != 0:
             return drop_rate_hepler(lvls_df)
 
         return drop_rate_hepler(filtered_df)

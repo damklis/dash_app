@@ -3,15 +3,14 @@ import numpy as np
 
 class BaseAggregator(object):
 
-    def __init__(self, dataframe, app_version):
+    def __init__(self, dataframe):
         self.dataframe = dataframe
-        self.app_version = app_version
 
-    def choose_appversion(self):
+    def choose_appversion(self, app_version):
         """
         This function filter DataFrame by the version of the application.
         """
-        return self.dataframe[self.dataframe["app_version"] == self.app_version]\
+        return self.dataframe[self.dataframe["app_version"] == app_version]\
             .drop_duplicates()
 
     def add_difficulty_level(self, column):
@@ -26,4 +25,4 @@ class BaseAggregator(object):
             return "expert"
 
     def __str___(self):
-        return f"BaseAggregator({self.dataframe}, {self.app_version})"
+        return f"BaseAggregator({self.dataframe.info()})"

@@ -1,4 +1,6 @@
 # GameMetrics DASHBOARD
+![Screencast-from-10 11 2019-12_12_37](https://user-images.githubusercontent.com/43547278/68543152-b0e44280-03b3-11ea-9eb0-5f7adc00f70e.gif)
+
 GameMetrics Dashboard is a web application build with Python Dash library.
 It is a user-friendly UI showing statistics about your application (in my case FreeToPlay mobile game).
 
