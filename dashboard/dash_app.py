@@ -21,7 +21,6 @@ import jsonpickle
 import jsonpickle.ext.pandas as jsonpickle_pandas
 import flask
 
-
 jsonpickle_pandas.register_handlers()
 
 TODAY_DATE = str(datetime.date.today()).replace("-","_")

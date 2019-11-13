@@ -15,6 +15,4 @@ RUN pip3 install -r /app/requirements.txt
 
 EXPOSE 80
 
-ENTRYPOINT ["/app"]
-
 CMD ["python", "dashboard/dash_app.py"]
