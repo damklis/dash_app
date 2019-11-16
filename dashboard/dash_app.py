@@ -1,25 +1,25 @@
-from textwrap import dedent as d
-import dash
-import dash_html_components as html
-import dash_core_components as dcc
-from datetime import datetime as dt
-from dash.dependencies import Input, Output
-import plotly.graph_objs as go
-import pandas as pd
-import numpy as np
-from factory.containers.events_container import EventsContainer
-from factory.content_factory import ContentFactory
-from content.app_content import (fill_drop_rate_tab_with_content, fill_economy_tab_with_content,
-fill_funnel_with_content, fill_sessions_with_content, fill_win_ratio_tab_with_content) 
+import json
 import base64
 import urllib
 import io
 import datetime
-from common.app_settings import Tabs, StyleSheets
-import json
+from textwrap import dedent as d
+import dash
+import dash_html_components as html
+import dash_core_components as dcc
+from dash.dependencies import Input, Output
+import plotly.graph_objs as go
+import pandas as pd
+import numpy as np
 import jsonpickle
 import jsonpickle.ext.pandas as jsonpickle_pandas
 import flask
+from dashboard.common.app_settings import Tabs, StyleSheets
+from dashboard.containers.events_container import EventsContainer
+from dashboard.factory.content_factory import ContentFactory
+from dashboard.content.app_content import (fill_drop_rate_tab_with_content,
+fill_economy_tab_with_content,fill_funnel_with_content,
+fill_sessions_with_content, fill_win_ratio_tab_with_content) 
 
 jsonpickle_pandas.register_handlers()
 
@@ -300,6 +300,5 @@ def download_excel_report(app_version, cached_json_data):
     file_name = f"App_report_{TODAY_DATE}.xlsx"
     return data, file_name
 
-
-if __name__ == "__main__":
-    app.run_server(debug=True, host="0.0.0.0", port=80)
+def run_dash_app():
+    app.run_server(debug=True, host="0.0.0.0")

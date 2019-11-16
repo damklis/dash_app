@@ -56,14 +56,14 @@ def fill_drop_rate_tab_with_content(df):
                         go.Table(
                         columnwidth=[0.3, 0.4, 0.5, 0.5, 0.5, 0.5],
                         header=dict(
-                            values=["diff_level", "board_id", "total_users", "drop_rate_%", "stay_rate_%", "diff_%"],
+                            values=["diff_level", "board_id", "total_users", "drop_rate", "stay_rate", "diff"],
                             font=dict(size=15),
                             line = dict(color="#7D7F80"),
                             align = "center",
                             fill = dict(color="rgb(249, 105, 79)"),
                             ),
                         cells=dict(
-                            values=[df[k].to_list() for k in df[["diff_level", "board_id", "total_users", "drop_rate_%", "stay_rate_%", "diff_%"]]],
+                            values=[df[k].to_list() for k in df[["diff_level", "board_id", "total_users", "drop_rate", "stay_rate", "diff"]]],
                             line = dict(color= "#7D7F80"),
                             align = "center",
                             fill = dict(color=["#247ec9","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa"]),

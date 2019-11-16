@@ -1,9 +1,9 @@
-from factory.containers.events_container import EventsContainer
-from factory.aggregations.funnel_aggregations import FunnelAggregator
-from factory.aggregations.session_aggregations import SessionAgregator
-from factory.aggregations.winratio_aggregations import WinRatioAgregator
-from factory.aggregations.droprate_aggregations import DropRateAgregator
-from factory.aggregations.economy_aggregations import EconomyAgregator
+from dashboard.containers.events_container import EventsContainer
+from dashboard.aggregations.funnel_aggregations import FunnelAggregator
+from dashboard.aggregations.session_aggregations import SessionAgregator
+from dashboard.aggregations.winratio_aggregations import WinRatioAgregator
+from dashboard.aggregations.droprate_aggregations import DropRateAgregator
+from dashboard.aggregations.economy_aggregations import EconomyAgregator
 
 class ContentFactory(object):
 

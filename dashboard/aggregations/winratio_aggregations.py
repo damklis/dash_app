@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from factory.aggregations.base_aggregations import BaseAggregator
+from dashboard.aggregations.base_aggregations import BaseAggregator
 import math
 
 
