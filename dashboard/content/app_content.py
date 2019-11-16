@@ -18,7 +18,7 @@ def fill_win_ratio_tab_with_content(df):
                         columnwidth=[0.20, 0.20, 0.27, 0.23, 0.23, 0.35, 0.4, 0.30, 0.30, 0.30],
                         header=dict(
                             values=["diff_level", "board_id", "total_games", "wins", "loss", "moves_left",
-                                    "median_attempt", "win_ratio_%", "std_err_%", "randomness"],
+                                    "median_attempt", "win_ratio", "std_err", "randomness"],
                             font=dict(size=15),
                             line = dict(color="#7D7F80"),
                             align = "center",
@@ -27,8 +27,8 @@ def fill_win_ratio_tab_with_content(df):
                         cells=dict(
                             values=[df[k].to_list() for k in df[["diff_level", "board_id", "total_games",
                                                                  "wins", "loss", "moves_left",
-                                                                 "median_attempt", "win_ratio_%",
-                                                                 "std_err_%", "randomness"]]],
+                                                                 "median_attempt", "win_ratio",
+                                                                 "std_err", "randomness"]]],
                             line = dict(color= "#7D7F80"),
                             align = "center",
                             fill = dict(color=["#247ec9","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa"]),
