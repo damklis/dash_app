@@ -3,7 +3,7 @@ import numpy as np
 from dashboard.aggregations.base_aggregations import BaseAggregator
 import math
 
-class DropRateAgregator(BaseAggregator):
+class DropRateAggregator(BaseAggregator):
 
     def __init__(self, dataframe, lvls_bundle, diff_level):
         super().__init__(dataframe)

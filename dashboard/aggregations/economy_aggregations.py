@@ -4,7 +4,7 @@ from dashboard.aggregations.base_aggregations import BaseAggregator
 import math
 
 
-class EconomyAgregator(BaseAggregator):
+class EconomyAggregator(BaseAggregator):
 
     def __init__(self, dataframe, lvls_bundle):
         super().__init__(dataframe)
@@ -16,7 +16,9 @@ class EconomyAgregator(BaseAggregator):
         This table will be used in the chart as input data.
         """
         filtered_df = self.choose_appversion(app_version)
-        lvls_df = filtered_df[filtered_df["levels_bundle"].isin(self.lvls_bundle)]
+        lvls_df = filtered_df.where(
+            lambda r: r["levels_bundle"].isin(self.lvls_bundle)
+        )
 
         if len(self.lvls_bundle) != 0:
             return lvls_df.sort_values(by="level")

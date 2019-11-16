@@ -1,9 +1,9 @@
 from dashboard.containers.events_container import EventsContainer
 from dashboard.aggregations.funnel_aggregations import FunnelAggregator
-from dashboard.aggregations.session_aggregations import SessionAgregator
-from dashboard.aggregations.winratio_aggregations import WinRatioAgregator
-from dashboard.aggregations.droprate_aggregations import DropRateAgregator
-from dashboard.aggregations.economy_aggregations import EconomyAgregator
+from dashboard.aggregations.session_aggregations import SessionAggregator
+from dashboard.aggregations.winratio_aggregations import WinRatioAggregator
+from dashboard.aggregations.droprate_aggregations import DropRateAggregator
+from dashboard.aggregations.economy_aggregations import EconomyAggregator
 
 class ContentFactory(object):
 
@@ -13,11 +13,11 @@ class ContentFactory(object):
         self.resource = resource
         self.df_data = data
         self.randomness_label = randomness
-        self.dr = DropRateAgregator(events.drop_rate, lvls, diff_dr)
-        self.wr = WinRatioAgregator(events.win_lose, lvls, diff_wr, randomness)
-        self.ec = EconomyAgregator(events.economy, lvls)
-        self.ec2 = EconomyAgregator(events.economy_2, lvls)
-        self.sess = SessionAgregator(events.session)
+        self.dr = DropRateAggregator(events.drop_rate, lvls, diff_dr)
+        self.wr = WinRatioAggregator(events.win_lose, lvls, diff_wr, randomness)
+        self.ec = EconomyAggregator(events.economy, lvls)
+        self.ec2 = EconomyAggregator(events.economy_2, lvls)
+        self.sess = SessionAggregator(events.session)
         self.fun = FunnelAggregator(events.funnel)
         _fst_vers, _snd_vers = events.get_n_last_versions(2)
 

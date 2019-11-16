@@ -90,7 +90,7 @@ def fill_funnel_with_content(df,df2, app_version, app_version_2):
                     "data":[
                         go.Bar(
                         x=df["step"],
-                        y=df["unique_users_%"],
+                        y=df["unique_users"],
                         name="Version: " + app_version,
                         marker=dict(
                             color="rgb(49,130,189)"
@@ -98,7 +98,7 @@ def fill_funnel_with_content(df,df2, app_version, app_version_2):
                         ),
                         go.Scatter(
                         x=df2["step"],
-                        y=df2["unique_users_%"],
+                        y=df2["unique_users"],
                         mode = "lines+markers",
                         name="Version: " + app_version_2,
                         marker=dict(

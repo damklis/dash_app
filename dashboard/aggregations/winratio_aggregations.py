@@ -4,7 +4,7 @@ from dashboard.aggregations.base_aggregations import BaseAggregator
 import math
 
 
-class WinRatioAgregator(BaseAggregator):
+class WinRatioAggregator(BaseAggregator):
 
     def __init__(self, dataframe, lvls_bundle, diff_level, randomness):
         super().__init__(dataframe)
