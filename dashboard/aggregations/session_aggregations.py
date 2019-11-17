@@ -30,5 +30,5 @@ class SessionAggregator(BaseAggregator):
             .assign(
                 drop=lambda r: round(r["user_id"]/r["user_id"].max()*100, 2)
             )
-            .loc[:, ["session", "drop"]]
+            .get(["session", "drop"])
         )
