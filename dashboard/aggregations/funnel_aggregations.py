@@ -43,7 +43,10 @@ class FunnelAggregator(BaseAggregator):
         if df["event_name"] in ("pet_type", "chest"):
             return df["event_name"]
         elif df["event_name"] == "tutorial_step":
-            return df["event_name"][:8] +"_"+ df["board_id"][4:] +"_"+ df["step_id"]
+            name = df["event_name"][:8]
+            level = df["board_id"][4:]
+            step_id = df["step_id"]
+            return "_".join([name, level, step_id])
         else:
             return df["event_name"] + df["board_id"]
 
