@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
-from factory.aggregations.base_aggregations import BaseAggregator
+from dashboard.aggregations.base_aggregations import BaseAggregator
 
-class SessionAgregator(BaseAggregator):
+class SessionAggregator(BaseAggregator):
 
     def __init__(self, dataframe):
         super().__init__(dataframe)
@@ -18,13 +18,17 @@ class SessionAgregator(BaseAggregator):
         glob_sess_mean = round(filtered_df["sess_time"].mean() / 60,2)
         glob_sess_median = round(filtered_df["sess_time"].median() / 60,2)
 
-        ### calculating metrics
-        df_pvt = filtered_df.groupby("session").agg(
-            lambda x: len(x.unique())
-                ).reset_index()
-
-        df_pvt["drop"] = round(df_pvt["user_id"] / df_pvt["user_id"].max() * 100, 2)
-
-        df = df_pvt[["session", "drop"]]
-
-        return (glob_sess_mean, glob_sess_median, df)
+        return (
+            glob_sess_mean,
+            glob_sess_median,
+            filtered_df
+            .groupby("session")
+            .agg(
+                lambda sess: len(sess.unique())
+            )
+            .reset_index()
+            .assign(
+                drop=lambda r: round(r["user_id"]/r["user_id"].max()*100, 2)
+            )
+            .get(["session", "drop"])
+        )

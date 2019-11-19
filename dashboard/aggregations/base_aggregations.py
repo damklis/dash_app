@@ -10,7 +10,7 @@ class BaseAggregator(object):
         """
         This function filter DataFrame by the version of the application.
         """
-        return self.dataframe[self.dataframe["app_version"] == app_version]\
+        return self.dataframe[self.dataframe["app_version"] == str(app_version)]\
             .drop_duplicates()
 
     def add_difficulty_level(self, column):

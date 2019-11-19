@@ -1,7 +1,7 @@
 
 import pandas as pd
 import numpy as np
-from factory.aggregations.base_aggregations import BaseAggregator
+from dashboard.aggregations.base_aggregations import BaseAggregator
 
 
 class FunnelAggregator(BaseAggregator):
@@ -36,16 +36,19 @@ class FunnelAggregator(BaseAggregator):
         else:
             return df["step"]
 
-    def add_step(self, row1, row2, row3):
+    def add_step(self, df):
         """
         Maps event name, board_id and returns step.
         """
-        if row1 in ("pet_type", "chest"):
-            return row1
-        elif row1 == "tutorial_step":
-            return row1[:8] + "_" + row2[4:] + "_" + row3
+        if df["event_name"] in ("pet_type", "chest"):
+            return df["event_name"]
+        elif df["event_name"] == "tutorial_step":
+            name = df["event_name"][:8]
+            level = df["board_id"][4:]
+            step_id = df["step_id"]
+            return "_".join([name, level, step_id])
         else:
-            return row1 + row2
+            return df["event_name"] + df["board_id"]
 
     def create_funnel_df(self, app_version):
         """
@@ -54,20 +57,18 @@ class FunnelAggregator(BaseAggregator):
         """
         filtered_df = self.choose_appversion(app_version)
 
-        ### replacing NULLs with board_id and step_id values
-        filtered_df["board_id"] = filtered_df.apply(self.add_board_id, axis=1)
-        filtered_df["step_id"] = filtered_df.apply(self.add_step_id, axis=1)
-
-        df_pv = filtered_df.groupby(
-            by=["event_name","board_id", "step_id"]
-            ).agg({"total_users": np.sum}).fillna(0).reset_index()
-
-        ### calculating metrics
-        df_pv["unique_users_%"] = df_pv["total_users"] / df_pv["total_users"].max() * 100
-        df_pv["unique_users_%"] = df_pv["unique_users_%"].apply(lambda x: round(x,2))
-        df_pv["step"] = df_pv.apply(lambda row: self.add_step(
-            row["event_name"], row["board_id"], row["step_id"]), axis=1)
-
-        df_pv = df_pv[df_pv["step"] != "tutorial_04_3/2"]
-
-        return df_pv.sort_values(by=["board_id", "step_id"])[:self.max_steps]
+        return (filtered_df
+             .assign(
+                board_id = filtered_df.apply(self.add_board_id, axis=1),
+                step_id = filtered_df.apply(self.add_step_id, axis=1)
+            ).groupby(
+                by=["event_name","board_id", "step_id"]
+            ).agg(
+                {"total_users": np.sum}
+            ).fillna(0)
+             .reset_index()
+             .assign(
+                unique_users = lambda r: round(r["total_users"]/r["total_users"].max(),4)*100,
+                step = lambda r: r.apply(self.add_step, axis=1)
+            ).sort_values(by=["board_id", "step_id"])[:self.max_steps]
+        )

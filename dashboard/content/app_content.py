@@ -18,7 +18,7 @@ def fill_win_ratio_tab_with_content(df):
                         columnwidth=[0.20, 0.20, 0.27, 0.23, 0.23, 0.35, 0.4, 0.30, 0.30, 0.30],
                         header=dict(
                             values=["diff_level", "board_id", "total_games", "wins", "loss", "moves_left",
-                                    "median_attempt", "win_ratio_%", "std_err_%", "randomness"],
+                                    "median_attempt", "win_ratio", "std_err", "randomness"],
                             font=dict(size=15),
                             line = dict(color="#7D7F80"),
                             align = "center",
@@ -27,8 +27,8 @@ def fill_win_ratio_tab_with_content(df):
                         cells=dict(
                             values=[df[k].to_list() for k in df[["diff_level", "board_id", "total_games",
                                                                  "wins", "loss", "moves_left",
-                                                                 "median_attempt", "win_ratio_%",
-                                                                 "std_err_%", "randomness"]]],
+                                                                 "median_attempt", "win_ratio",
+                                                                 "std_err", "randomness"]]],
                             line = dict(color= "#7D7F80"),
                             align = "center",
                             fill = dict(color=["#247ec9","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa"]),
@@ -56,14 +56,14 @@ def fill_drop_rate_tab_with_content(df):
                         go.Table(
                         columnwidth=[0.3, 0.4, 0.5, 0.5, 0.5, 0.5],
                         header=dict(
-                            values=["diff_level", "board_id", "total_users", "drop_rate_%", "stay_rate_%", "diff_%"],
+                            values=["diff_level", "board_id", "total_users", "drop_rate", "stay_rate", "diff"],
                             font=dict(size=15),
                             line = dict(color="#7D7F80"),
                             align = "center",
                             fill = dict(color="rgb(249, 105, 79)"),
                             ),
                         cells=dict(
-                            values=[df[k].to_list() for k in df[["diff_level", "board_id", "total_users", "drop_rate_%", "stay_rate_%", "diff_%"]]],
+                            values=[df[k].to_list() for k in df[["diff_level", "board_id", "total_users", "drop_rate", "stay_rate", "diff"]]],
                             line = dict(color= "#7D7F80"),
                             align = "center",
                             fill = dict(color=["#247ec9","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa","#f5f5fa"]),
@@ -90,7 +90,7 @@ def fill_funnel_with_content(df,df2, app_version, app_version_2):
                     "data":[
                         go.Bar(
                         x=df["step"],
-                        y=df["unique_users_%"],
+                        y=df["unique_users"],
                         name="Version: " + app_version,
                         marker=dict(
                             color="rgb(49,130,189)"
@@ -98,7 +98,7 @@ def fill_funnel_with_content(df,df2, app_version, app_version_2):
                         ),
                         go.Scatter(
                         x=df2["step"],
-                        y=df2["unique_users_%"],
+                        y=df2["unique_users"],
                         mode = "lines+markers",
                         name="Version: " + app_version_2,
                         marker=dict(
