@@ -14,6 +14,10 @@ class DataDownloader(object):
             self.db = kwargs.get("database")
             self.__password = kwargs.get("password")
             self.__conn = self.make_hive_connection()
+            self.category_type_col = [
+                "baord_id", "levels_bundle",
+                "app_version", "event_name"
+            ]
 
         def connection_status(self):
             """
@@ -68,7 +72,7 @@ class DataDownloader(object):
             print("Downloading raw events into {}.".format(path))
             dataframe = self.read_sql(sql_query)
             optimized_df = self.change_to_category_type(
-                dataframe, ["baord_id", "levels_bundle", "app_version","event_name"]
+                dataframe, self.category_type_col
                 )
             print("Saving DataFrame as .pkl file.")
             optimized_df.to_pickle(path)
