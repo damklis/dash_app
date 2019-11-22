@@ -15,4 +15,4 @@ RUN pip3 install -r /app/requirements.txt
 
 EXPOSE 80
 
-CMD ["python", "dashboard/dash_app.py"]
+CMD ["python", "-m", "dashboard"]
